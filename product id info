@@ -1,0 +1,25 @@
+SELECT 
+    -- Product Details
+    t3.product_id AS `Product ID`,
+    t3.title AS `Product Name`,
+    
+    -- Video & Creator Details
+    t1.username AS `Creator username`,
+    CONCAT('https://www.tiktok.com/@', t1.username, '/video/', t1.video_id) AS `Video link`,
+    DATE_FORMAT(t1.video_post_time, '%Y-%m-%d') AS `Video post date`,
+    
+    -- Performance Data (Linked by Daily Stats)
+    t2.start_date AS `Performance Date`,
+    t2.gmv_amount AS `Video GMV`,
+    t2.items_sold AS `Items Sold`,
+    t1.views AS `Total Views`
+
+FROM boosters.tts_video_stats AS t1
+-- 1. Link to Daily Stats to get performance by date
+INNER JOIN boosters.tts_video_daily_stats AS t2 
+    ON t1.video_id = t2.video_id
+-- 2. Link to Products Table by extracting the ID from the JSON
+LEFT JOIN boosters.tts_products AS t3 
+    ON t3.product_id = JSON_UNQUOTE(JSON_EXTRACT(t1.products, '$[0].id'))
+
+ORDER BY t2.start_date DESC;

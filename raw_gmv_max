@@ -1,0 +1,12 @@
+SELECT 
+    created_at, 
+    updated_at, 
+    advertiser_id, 
+    stat_time_day, 
+    cost, 
+    net_cost, 
+    gross_revenue, 
+    orders, 
+    cost_per_order, 
+    roi
+FROM boosters.tt_all_gmv_advertiser_lv;
